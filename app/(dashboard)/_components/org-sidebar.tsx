@@ -1,9 +1,74 @@
 "use client";
+import Image from "next/image";
+import { Poppins } from "next/font/google";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { OrganizationSwitcher } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { LayoutDashboard, Star } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+
+const font = Poppins({ weight: ["600"], subsets: ["latin"] });
+
 const OrgSideBar = () => {
+  const searchParams = useSearchParams();
+  const favorites = searchParams.get("favorites");
   return (
-    <div className="hidden lg:flex flex-col space-y-6 pl-5 pt-5 bg-red-500 w-52 ">
-      <div>Orgsidebar</div>
-      <div>Orgsidebar</div>
+    <div className="hidden lg:flex flex-col space-y-6 pl-5 pt-5 w-52">
+      <Link href="/">
+        <div className="flex gap-x-4 items-center">
+          <Image src="logo.svg" alt="Logo" width={60} height={60} />
+          <span className={cn("text-2xl ", font.className)}>Boardy</span>
+        </div>
+      </Link>
+      <OrganizationSwitcher
+        hidePersonal
+        appearance={{
+          elements: {
+            rootBox: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            },
+            organizationSwitcherTrigger: {
+              padding: "16px",
+              width: "100%",
+              border: "1px solid #E5E7EB",
+              justifyContent: "space-between",
+            },
+          },
+        }}
+      />
+      <div className="space-y-1 w-full">
+        <Button
+          asChild
+          variant={favorites ? "ghost" : "secondary"}
+          size="lg"
+          className="justify-start px-2 w-full font-normal "
+        >
+          <Link href="/">
+            <LayoutDashboard className="h-4 w-4 mr-2" />
+            Team Boards
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant={favorites ? "secondary" : "ghost"}
+          size="lg"
+          className="justify-start px-2 w-full font-normal "
+        >
+          <Link
+            href={{
+              pathname: "/",
+              query: { favorites: true },
+            }}
+          >
+            <Star className="h-4 w-4 mr-2" />
+            Favourites
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 };
